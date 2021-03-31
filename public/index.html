@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Список покупок</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<h2>Список покупок</h2>
+<form name="stuffForm">
+    <input type="hidden" name="id" value="0" />
+    <div class="form-group">
+        <label for="name">Название:</label>
+        <input class="form-control" id="name" value=""/>
+    </div>
+    <div class="form-group">
+        <label for="price">Цена:</label>
+        <input class="form-control" id="price" value=""/>
+    </div>
+    <div class="panel-body">
+        <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+        <a id="reset" class="btn btn-sm btn-primary">Сбросить</a>
+    </div>
+</form>
+<table class="table table-condensed table-striped table-bordered">
+    <thead><tr><th>Id</th><th>Название</th><th>Цена</th><th></th></tr></thead>
+    <tbody>
+    </tbody>
+</table>
+</body>
+<script src="./script.js"></script>
+</html>

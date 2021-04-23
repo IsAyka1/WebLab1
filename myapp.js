@@ -25,6 +25,10 @@ app.get('/registrationPage', function(req, res) {
     res.sendFile(__dirname + '/page/registrationPage.html');
 });
 
+app.get('/index', function(req, res) {
+    res.sendFile(__dirname + '/page/index.html');
+});
+
 app.get('/user', function (req, res) {
     res.sendFile(__dirname + '/page/user.html');
 });

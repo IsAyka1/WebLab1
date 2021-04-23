@@ -1,52 +1,15 @@
 const express = require('express');
-//import express from 'express';
 const router = express.Router();
-//import bcrypt from 'bcrypt';
 const bcrypt = require('bcrypt');
-//const uuidv4 = require('uuid');
 
-//const express = require("express");
 const fs = require("fs");
-//import fs from 'fs';
 
-//const app = express();
-//const jsonParser = express.json();
 const filePath = "Bd.json";
 const User = require("../models/user").user;
-//import User from  "../models/user.js";
-
-//let auth = function(req, res, next) {
-//    db
-//        .getToken(req.headers.authorization)
-//        .then((results)=>{
-//            if (results.length == 0) {
-//                const err = new Error('Не авторизован!');
-//                err.status = 401;
-//                next(err);
-//            } else {
-//                next()
-//            }
-//        })
-//        .catch((err)=>{
-//            next(err);
-//        })
-//}
 
 const isValidPassword = function(user, password) {
     return bcrypt.compareSync(password, user.password);
 }
-
-// router.get('/', (req, res)=>{
-//     res.json({
-//         message: 'Добро пожаловать!'
-//     })
-// });
-
-//router.get('/secret', auth, (req, res)=>{
-//    res.json({
-//        message: 'Секретная страница!'
-//    })
-//});
 
 router.post('/registration', (req, res, next) => {
     if (!req.body) return res.sendStatus(400);
@@ -60,22 +23,13 @@ router.post('/registration', (req, res, next) => {
             });
         }
     }
-
     if(req.body.password === req.body.repeatPassword) {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
-            //bcrypt.compare(req.body.password, hash, (err, result) => {
-            //     console.log('bcrypt');
-            //     if (err) {
-            //         console.log('bcrypt-err');
-            //     }
-            //     if (result) {
-            //         console.log('bcrypt-true');
-            //     }
-            // });
             console.log('bcrypt');
             if (err) {
-                return res.status(500).json({
-                    error: err
+                return res.status(400).json({
+                    error: err,
+                    message: "Ошибка хеширования"
                 });
             } else {
                 const user = new User({ name: req.body.name, email: req.body.email, password: hash });
@@ -88,9 +42,9 @@ router.post('/registration', (req, res, next) => {
         });
 
     } else {
-        const err = new Error('Не совпадает пароль и подтверждение пароля!');
-        err.status = 400;
-        next(err);
+        return res.status(401).json({
+            message: "Пароли не совпадают!"
+        });
     }
 })
 
@@ -106,25 +60,42 @@ router.post('/login', (req, res, next) => {
                 console.log('bcrypt');
                 if (err) {
                     return res.status(401).json({
-                        message: "Login failed"
+                        message: "Не удалось выполнить вход"
                     });
                 }
                 if (result) {
                     one = bd[i];
+                    res.send(one);
+                } else {
+                    return res.status(401).json({
+                        message: "Не правильный пароль!"
+                    });
                 }
             });
             break;
         }
     }
-    if(one) {
-        res.send(one);
-    }
-    else {
-        const err = new Error('Не правильный пароль или логин!');
-        err.status = 404;
-        next(err);
-    }
+    // if(!one) {
+    //     return res.status(402).json({
+    //         message: "Не правильный  логин!"
+    //     });
+    // }
 })
+
+router.post('/myData', (req, res, next) => {
+    if (!req.body) return res.sendStatus(400);
+    console.log('data');
+    let data = fs.readFileSync(filePath, "utf8");
+    let bd = JSON.parse(data);
+    for (var i = 0; i < bd.length; i++) {
+        if (bd[i].email == req.body.email) {
+            let data = JSON.stringify(bd[i]);
+            res.send(data);
+        }
+    }
+
+})
+
 module.exports.fs = fs;
 module.exports.router = router;
 

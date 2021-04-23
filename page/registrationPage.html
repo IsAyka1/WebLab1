@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <title>Registration</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body{
+            font-weight: lighter;
+            font-family: monospace, fantasy;
+            text-transform: none;
+            margin-left: 70px;
+            margin-right: 70px;
+            padding: 20px 50px;
+            background-color: #d4f3f3;
+        }
+    </style>
 </head>
 <body>
     <form name="regoForm">
@@ -32,25 +42,23 @@
 <!--<script  type="text/javascript" src="userScript.js"></script>-->
 <script>
     async function GetRegistration(name, email, password, password2) {
-        try {
-            const response = await fetch("/registration", {
-                method: "POST",
-                headers: {"Accept": "application/json", "Content-Type": "application/json"},
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                    repeatPassword: password2
-                })
-            });
-            if (response.ok === true) {
-                UserPage();
-            }
-        }
-        catch(err) {
+        const response = await fetch("/registration", {
+            method: "POST",
+            headers: {"Accept": "application/json", "Content-Type": "application/json"},
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password,
+                repeatPassword: password2
+            })
+        }).catch((err) => {
             alert(err.message);
+        });
+        if (response.ok === true) {
+            UserPage();
+        } else {
+            alert("error " + response.status + " " + response.statusText);
         }
-
     }
 
     function UserPage() {

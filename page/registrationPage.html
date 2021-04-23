@@ -10,48 +10,53 @@
     <form name="regoForm">
         <div class="form-group">
             <label for="name">Ваше имя:</label>
-            <input class="form-control" id="name" value="" />
+            <input type="text" class="form-control" id="name" name="name" value="" />
         </div>
         <div class="form-group">
             <label for="email">Логин:</label>
-            <input class="form-control" id="email" value="" />
+            <input type="email" class="form-control" id="email" name="email" value="" />
         </div>
         <div class="form-group">
             <label for="password">Пароль:</label>
-            <input class="form-control" id="password" value="" />
+            <input type="password" class="form-control" id="password" value="" />
         </div>
         <div class="form-group">
             <label for="password2">Повторите пароль:</label>
-            <input class="form-control" id="password2" value="" />
+            <input type="password" class="form-control" id="password2" value="" />
         </div>
         <div class="panel-body">
-            <button type="submit" class="btn btn-sm btn-primary">Зарегистрироваться</button>
-        </div>
+            <button type="submit"  class="btn btn-sm btn-primary">Зарегистрироваться</button>
+        </div><!--onclick="document.location='/user'"-->
     </form>
 </body>
+<!--<script  type="text/javascript" src="userScript.js"></script>-->
 <script>
     async function GetRegistration(name, email, password, password2) {
-        const response = await fetch("/registration", {
-            method: "POST",
-            headers: {"Accept": "application/json", "Content-Type": "application/json"},
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                password: password,
-                repeatPassword: password2
-            })
-        });
-        if (response.ok === true) {
-            const user = await response.json();
-            const responseUser = await fetch("/user");
-
-            const h2 = document.createElement("h2");
-            h2.append("Вы успешно зарегистрировались!");
-            const form = document.forms["userForm"];
-            form.elements["name"].value = user.name;
-            form.elements["email"].value = user.email;
-            form.elements["password"].value = user.password;
+        try {
+            const response = await fetch("/registration", {
+                method: "POST",
+                headers: {"Accept": "application/json", "Content-Type": "application/json"},
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    repeatPassword: password2
+                })
+            });
+            if (response.ok === true) {
+                UserPage();
+            }
         }
+        catch(err) {
+            alert(err.message);
+        }
+
+    }
+
+    function UserPage() {
+        alert("Вы успешно зарегистрировались, " + document.regoForm.name.value + "!");
+        self.location = "user?email=" +
+            escape(document.regoForm.email.value);
     }
 
     document.forms["regoForm"].addEventListener("submit", e => {
